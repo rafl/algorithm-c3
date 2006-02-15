@@ -40,7 +40,7 @@ sub _merge {
         }
         die "Inconsistent hierarchy found while merging '$class_being_merged':\n\t" .
             "current merge results [\n\t\t" . (join ",\n\t\t" => @res) . "\n\t]\n\t" .
-            "mergeing failed on '$reject'\n" if not $cand;
+            "merging failed on '$reject'\n" if not $cand;
         push @res => $cand;
         # now loop through our non-empties and pop 
         # off the head if it matches our canidate
@@ -71,7 +71,7 @@ __END__
 
 =head1 NAME
 
-Algorithm::C3 - A module for merging lists using the C3 algorithm
+Algorithm::C3 - A module for merging hierarchies using the C3 algorithm
 
 =head1 SYNOPSIS
 
