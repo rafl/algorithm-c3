@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 
 BEGIN {
     use_ok('Algorithm::C3');          
@@ -47,7 +47,8 @@ BEGIN {
     package My::G;
     our @ISA = ('My::E');    
     package My::H;       
-    our @ISA = ('My::G', 'My::F');         
+    our @ISA = ('My::G', 'My::F');
+    sub method_exists_only_in_H { @ISA }
 }
 
 {
@@ -67,4 +68,10 @@ eval {
 };
 ok($@, '... this died as we expected');
 
-
+eval {
+    Algorithm::C3::merge(
+        'My::H',
+        'method_exists_only_in_H'
+    );
+};
+ok($@, '... this died as we expected');

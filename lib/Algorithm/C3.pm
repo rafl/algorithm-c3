@@ -8,17 +8,6 @@ use Carp 'confess';
 
 our $VERSION = '0.01';
 
-sub _fetcher {
-    my ($root, $_parent_fetcher) = @_;
-
-    my $parent_fetcher = $_parent_fetcher;
-    unless (ref($parent_fetcher) && ref($parent_fetcher) eq 'CODE') {
-        $parent_fetcher = $root->can($_parent_fetcher)
-            || confess "Could not find method $_parent_fetcher in $root";
-    }
-    [ $parent_fetcher->($root) ];
-}
-
 sub merge {
     my ($root, $parent_fetcher) = @_;
 
@@ -26,14 +15,24 @@ sub merge {
     my %fcache; # cache of _fetcher results
     my %mcache; # cache of merge do-block results
 
+    my $pfetcher_is_coderef = ref($parent_fetcher) eq 'CODE';
+
+    unless ($pfetcher_is_coderef or $root->can($parent_fetcher)) {
+        confess "Could not find method $parent_fetcher in $root";
+    }
+
     my $current_root = $root;
-    my $current_parents = $fcache{$root} ||= _fetcher($root, $parent_fetcher);
+    my $current_parents = [ $root->$parent_fetcher ];
     my $recurse_mergeout = [];
     my $i = 0;
 
     while(1) {
         if($i < @$current_parents) {
             my $new_root = $current_parents->[$i++];
+
+            unless ($pfetcher_is_coderef or $new_root->can($parent_fetcher)) {
+                confess "Could not find method $parent_fetcher in $new_root";
+            }
 
             push(@STACK, [
                 $current_root,
@@ -43,8 +42,7 @@ sub merge {
             ]);
 
             $current_root = $new_root;
-            $current_parents = $fcache{$current_root}
-                ||= _fetcher($current_root, $parent_fetcher);
+            $current_parents = $fcache{$current_root} ||= [ $current_root->$parent_fetcher ];
             $recurse_mergeout = [];
             $i = 0;
             next;
