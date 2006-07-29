@@ -1,11 +1,10 @@
 Build.PL
-Makefile.PL
-META.yml
 Changes
-MANIFEST
-MANIFEST.SKIP
-README
 lib/Algorithm/C3.pm
+Makefile.PL
+MANIFEST
+META.yml
+README
 t/000_load.t
 t/001_merge.t
 t/002_merge.t
