@@ -6,7 +6,7 @@ use warnings;
 
 use Carp 'confess';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub merge {
     my ($root, $parent_fetcher) = @_;
@@ -275,9 +275,11 @@ is the B<Devel::Cover> report on this module's test suite.
 
 =back 
 
-=head1 AUTHOR
+=head1 AUTHORS
 
 Stevan Little, E<lt>stevan@iinteractive.comE<gt>
+
+Brandon L. Black E<lt>blblack@gmail.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
