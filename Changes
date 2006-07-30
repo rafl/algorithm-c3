@@ -1,7 +1,7 @@
 Revision history for Perl extension Algorithm-C3.
 
-0.02 XXX - Not Yet Released - XXX
-    - Refactored for significant speed gains
+0.02 Sun. Jul. 30, 2006
+    - code refactored for speed by Brandon L. Black
 
 0.01 Wed. Feb. 15, 2006
     - initial release, code and tests taken from Class::C3
