@@ -55,7 +55,9 @@ sub merge {
             # http://www.python.org/2.3/mro.html :)
 
             # Initial set
-            my @seqs = ([$current_root], @$recurse_mergeout, $current_parents);
+            my @deepcopy_recurse_mergeout;
+            push(@deepcopy_recurse_mergeout, [@$_]) for (@$recurse_mergeout);
+            my @seqs = ([$current_root], @deepcopy_recurse_mergeout, [@$current_parents]);
 
             # Construct the tail-checking hash
             my %tails;
