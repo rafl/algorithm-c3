@@ -1,5 +1,8 @@
 Revision history for Perl extension Algorithm-C3.
 
+0.03 Tue. Aug. 08, 2006
+    - New test + bugfix for RT#20879
+
 0.02 Sun. Jul. 30, 2006
     - code refactored for speed by Brandon L. Black
 
