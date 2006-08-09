@@ -1,5 +1,9 @@
 Revision history for Perl extension Algorithm-C3.
 
+0.04 Wed. Aug. 09, 2006
+    - Remove accidental "use Class::C3" from t/006_complex_merge.t
+      (no functional changes from 0.03)
+
 0.03 Tue. Aug. 08, 2006
     - New test + bugfix for RT#20879
 
