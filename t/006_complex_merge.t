@@ -88,8 +88,6 @@ KJIHGFEDABC
     use base qw/Test::J Test::I/;
 }
 
-use Class::C3;
-
 sub supers {
     no strict 'refs';
     @{$_[0] . '::ISA'};
