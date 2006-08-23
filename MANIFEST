@@ -12,5 +12,7 @@ t/003_merge.t
 t/004_merge.t
 t/005_order_disagreement.t
 t/006_complex_merge.t
+t/007_cached_merge.t
+t/008_cached_merge_unordered.t
 t/pod.t
 t/pod_coverage.t
