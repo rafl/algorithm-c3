@@ -1,6 +1,6 @@
 Revision history for Perl extension Algorithm-C3.
 
-0.05 Not Yet Released XXXXXX
+0.05 Fri. Aug. 25, 2006
     - Add the ability for the caller to supply a persistent
       merge cache hashref
 
