@@ -54,37 +54,30 @@ sub merge {
             # http://www.python.org/2.3/mro.html :)
 
             # Initial set (make sure everything is copied - it will be modded)
-            my (@seqs, %tails);
-            for my $d (@$recurse_mergeout, $current_parents){
-              if(@$d){
-                push @seqs, [@$d];
-                # Construct the tail-checking hash
-                $tails{$_}++ for (@$d[1..$#$d]);
-              }
+            my @seqs = map { [@$_] } (@$recurse_mergeout, $current_parents);
+
+            # Construct the tail-checking hash
+            my %tails;
+            foreach my $seq (@seqs) {
+                $tails{$_}++ for (@$seq[1..$#$seq]);
             }
 
             my @res = ( $current_root );
             while (1) {
-                my ($cand, $winner);
-                my $j = 0;
+                my $cand;
+                my $winner;
                 foreach (@seqs) {
-                    $j++;
-                    if(!@$_){
-                      splice @seqs, $j, 1;
-                      next;
+                    next if !@$_;
+                    if(!$winner) {              # looking for a winner
+                        $cand = $_->[0];        # seq head is candidate
+                        next if $tails{$cand};  # he loses if in %tails
+                        push @res => $winner = $cand;
                     }
-                    
-                    if(!$winner){
-                      next if $tails{ $cand = $_->[0] };
-                      push(@res, $winner = $cand); 
-                    }
-                    
                     if($_->[0] eq $winner) {
                         shift @$_;                # strip off our winner
-                        $tails{ $_->[0] }-- if @$_; # keep %tails sane
+                        $tails{$_->[0]}-- if @$_; # keep %tails sane
                     }
                 }
-                
                 last if !$cand;
                 die q{Inconsistent hierarchy found while merging '}
                     . $current_root . qq{':\n\t}
@@ -317,4 +310,3 @@ This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
 
 =cut
-
