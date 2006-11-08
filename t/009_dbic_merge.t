@@ -57,7 +57,8 @@ The xx:: prefixes are just to be sure these bogus declarations never stomp on re
     our @ISA = qw/
       xx::DBIx::Class::Relationship::HasMany
       xx::DBIx::Class::Relationship::HasOne
-      xx::DBIx::Class::Relationship::BelongsTo xx::DBIx::Class::Relationship::ManyToMany
+      xx::DBIx::Class::Relationship::BelongsTo
+      xx::DBIx::Class::Relationship::ManyToMany
     /;
 
     package xx::DBIx::Class::Relationship::ProxyMethods;
