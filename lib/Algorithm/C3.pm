@@ -48,7 +48,6 @@ sub merge {
             $i = 0;
             next;
         }
-        %seen = ();
 
         my $mergeout = $cache->{merge}->{$current_root} ||= do {
 
@@ -93,6 +92,8 @@ sub merge {
         };
 
         return @$mergeout if !@STACK;
+
+        $seen{$current_root}--;
 
         ($current_root, $current_parents, $recurse_mergeout, $i)
             = @{pop @STACK};
