@@ -48,6 +48,7 @@ sub merge {
             $i = 0;
             next;
         }
+        %seen = ();
 
         my $mergeout = $cache->{merge}->{$current_root} ||= do {
 
