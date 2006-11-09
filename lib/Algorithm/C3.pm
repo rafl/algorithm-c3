@@ -24,10 +24,12 @@ sub merge {
     my $current_parents = [ $root->$parent_fetcher ];
     my $recurse_mergeout = [];
     my $i = 0;
+    my %seen;
 
     while(1) {
         if($i < @$current_parents) {
             my $new_root = $current_parents->[$i++];
+            die "Infinite loop detected" if $seen{$new_root}++;
 
             unless ($pfetcher_is_coderef or $new_root->can($parent_fetcher)) {
                 confess "Could not find method $parent_fetcher in $new_root";
