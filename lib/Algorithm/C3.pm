@@ -29,7 +29,8 @@ sub merge {
     while(1) {
         if($i < @$current_parents) {
             my $new_root = $current_parents->[$i++];
-            die "Infinite loop detected" if $seen{$new_root}++;
+            die "Infinite loop detected" if $seen{$new_root};
+            $seen{$new_root} = 1;
 
             unless ($pfetcher_is_coderef or $new_root->can($parent_fetcher)) {
                 confess "Could not find method $parent_fetcher in $new_root";
@@ -48,6 +49,8 @@ sub merge {
             $i = 0;
             next;
         }
+
+        $seen{$current_root} = 0;
 
         my $mergeout = $cache->{merge}->{$current_root} ||= do {
 
@@ -92,8 +95,6 @@ sub merge {
         };
 
         return @$mergeout if !@STACK;
-
-        $seen{$current_root}--;
 
         ($current_root, $current_parents, $recurse_mergeout, $i)
             = @{pop @STACK};
