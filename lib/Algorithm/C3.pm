@@ -6,7 +6,7 @@ use warnings;
 
 use Carp 'confess';
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 sub merge {
     my ($root, $parent_fetcher, $cache) = @_;

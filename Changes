@@ -1,5 +1,10 @@
 Revision history for Perl extension Algorithm-C3.
 
+0.06 XXX Not Yet Released
+    - Added tests from konobi
+    - Added some other new tests too
+    - Fixed infinite loop on recursive heirarchies
+
 0.05 Fri. Aug. 25, 2006
     - Add the ability for the caller to supply a persistent
       merge cache hashref
