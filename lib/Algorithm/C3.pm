@@ -24,16 +24,21 @@ sub merge {
     my $current_parents = [ $root->$parent_fetcher ];
     my $recurse_mergeout = [];
     my $i = 0;
-    my %seen;
+    my %seen = ( $root => 1 );
 
     while(1) {
         if($i < @$current_parents) {
             my $new_root = $current_parents->[$i++];
 
             if($seen{$new_root}) {
-                # XXX Can we give them a better diagnostic, with a list from $root => $new_root => foo => $new_root ??
-                die "Infinite loop detected, $new_root appears"
-                  . " twice in a bad way in the parents of $root"
+                my @isastack = (
+                    (map { $_->[0] } @STACK),
+                    $current_root,
+                    $new_root
+                );
+                shift @isastack while $isastack[0] ne $new_root;
+                my $isastack = join(q{ -> }, @isastack);
+                die "Infinite loop detected in parents of '$root': $isastack";
             }
             $seen{$new_root} = 1;
 

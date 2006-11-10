@@ -7,7 +7,7 @@ use Test::More;
 use Algorithm::C3; # we already did use_ok 10 times by now..
 
 plan skip_all => "Your system has no SIGALRM" if !exists $SIG{ALRM};
-plan tests => 5;
+plan tests => 8;
 
 =pod
 
@@ -80,6 +80,45 @@ my @loopies = (
         f => [qw(e)],
         e => [qw(d)],
         d => [qw(a b c)],
+        c => [],
+        b => [],
+        a => [],
+    },
+    { #6
+        k => [qw(j i)],
+        j => [qw(f)],
+        i => [qw(h f)],
+        h => [qw(g)],
+        g => [qw(d)],
+        f => [qw(e)],
+        e => [qw(d)],
+        d => [qw(a b c)],
+        c => [],
+        b => [qw(b)],
+        a => [],
+    },
+    { #7
+        k => [qw(k j i)],
+        j => [qw(f)],
+        i => [qw(h f)],
+        h => [qw(g)],
+        g => [qw(d)],
+        f => [qw(e)],
+        e => [qw(d)],
+        d => [qw(a b c)],
+        c => [],
+        b => [],
+        a => [],
+    },
+    { #7
+        k => [qw(j i)],
+        j => [qw(f)],
+        i => [qw(h f)],
+        h => [qw(g)],
+        g => [qw(d)],
+        f => [qw(e)],
+        e => [qw(d)],
+        d => [qw(a h b c)],
         c => [],
         b => [],
         a => [],
