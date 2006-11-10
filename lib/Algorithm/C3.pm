@@ -29,7 +29,12 @@ sub merge {
     while(1) {
         if($i < @$current_parents) {
             my $new_root = $current_parents->[$i++];
-            die "Infinite loop detected" if $seen{$new_root};
+
+            if($seen{$new_root}) {
+                # XXX Can we give them a better diagnostic, with a list from $root => $new_root => foo => $new_root ??
+                die "Infinite loop detected, $new_root appears"
+                  . " twice in a bad way in the parents of $root"
+            }
             $seen{$new_root} = 1;
 
             unless ($pfetcher_is_coderef or $new_root->can($parent_fetcher)) {
