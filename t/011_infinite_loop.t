@@ -3,11 +3,11 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More;
+use Algorithm::C3; # we already did use_ok 10 times by now..
 
-BEGIN {
-    use_ok('Algorithm::C3');
-}
+plan skip_all => "Your system has no SIGALRM" if !exists $SIG{ALRM};
+plan tests => 5;
 
 =pod
 
@@ -109,5 +109,4 @@ foreach my $loopy (@loopies) {
     else {
         ok(0, "Infinite loop apparently succeeded???");
     }
-    
 }
