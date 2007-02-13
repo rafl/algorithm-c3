@@ -86,6 +86,10 @@ sub merge {
                     if(!$winner) {              # looking for a winner
                         $cand = $_->[0];        # seq head is candidate
                         next if $tails{$cand};  # he loses if in %tails
+                        
+                        # Handy warn to give a output like the ones on
+                        # http://www.python.org/download/releases/2.3/mro/
+                        #warn " = " . join(' + ', @res) . "  + merge([" . join('] [',  map { join(', ', @$_) } grep { @$_ } @seqs) . "])\n";
                         push @res => $winner = $cand;
                     }
                     if($_->[0] eq $winner) {
@@ -93,6 +97,11 @@ sub merge {
                         $tails{$_->[0]}-- if @$_; # keep %tails sane
                     }
                 }
+                
+                # Handy warn to give a output like the ones on
+                # http://www.python.org/download/releases/2.3/mro/
+                #warn " = " . join(' + ', @res) . "\n" if !$cand; 
+                
                 last if !$cand;
                 die q{Inconsistent hierarchy found while merging '}
                     . $current_root . qq{':\n\t}
