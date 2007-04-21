@@ -26,9 +26,10 @@ sub merge {
     my $i = 0;
     my %seen = ( $root => 1 );
 
+    my ($new_root, $mergeout, $seq);
     while(1) {
         if($i < @$current_parents) {
-            my $new_root = $current_parents->[$i++];
+            $new_root = $current_parents->[$i++];
 
             if($seen{$new_root}) {
                 my @isastack = (
@@ -62,19 +63,22 @@ sub merge {
 
         $seen{$current_root} = 0;
 
-        my $mergeout = $cache->{merge}->{$current_root} ||= do {
+        $mergeout = $cache->{merge}->{$current_root} ||= do {
 
             # This do-block is the code formerly known as the function
             # that was a perl-port of the python code at
             # http://www.python.org/2.3/mro.html :)
 
             # Initial set (make sure everything is copied - it will be modded)
-            my @seqs = map { [@$_] } (@$recurse_mergeout, $current_parents);
+            my @seqs;
+            foreach (@$recurse_mergeout, $current_parents) {
+                push(@seqs, [@$_]) if @$_;
+            }
 
             # Construct the tail-checking hash
             my %tails;
-            foreach my $seq (@seqs) {
-                $tails{$_}++ for (@$seq[1..$#$seq]);
+            foreach $seq (@seqs) {
+                $tails{$seq->[$_]}++ for (1..$#$seq);
             }
 
             my @res = ( $current_root );
@@ -91,8 +95,10 @@ sub merge {
                         # http://www.python.org/download/releases/2.3/mro/
                         #warn " = " . join(' + ', @res) . "  + merge([" . join('] [',  map { join(', ', @$_) } grep { @$_ } @seqs) . "])\n";
                         push @res => $winner = $cand;
+                        shift @$_;                # strip off our winner
+                        $tails{$_->[0]}-- if @$_; # keep %tails sane
                     }
-                    if($_->[0] eq $winner) {
+                    elsif($_->[0] eq $winner) {
                         shift @$_;                # strip off our winner
                         $tails{$_->[0]}-- if @$_; # keep %tails sane
                     }
