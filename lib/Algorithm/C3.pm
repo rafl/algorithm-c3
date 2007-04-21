@@ -13,11 +13,7 @@ sub merge {
 
     $cache ||= {};
 
-    # stacks for simulating recursion
-    my @RSTACK;
-    my @PSTACK;
-    my @MSTACK;
-    my @ISTACK;
+    my @STACK; # stack for simulating recursion
 
     my $pfetcher_is_coderef = ref($parent_fetcher) eq 'CODE';
 
@@ -37,13 +33,14 @@ sub merge {
             $new_root = $current_parents->[$i++];
 
             if($seen{$new_root}) {
-                my @isastack = (
-                    @RSTACK,
-                    $current_root,
-                    $new_root
-                );
-                shift @isastack while $isastack[0] ne $new_root;
-                my $isastack = join(q{ -> }, @isastack);
+                my @isastack;
+                my $reached;
+                for(my $i = 0; $i < $#STACK; $i += 4) {
+                    if($reached || ($reached = ($STACK[$i] eq $new_root))) {
+                        push(@isastack, $STACK[$i]);
+                    }
+                }
+                my $isastack = join(q{ -> }, @isastack, $current_root, $new_root);
                 die "Infinite loop detected in parents of '$root': $isastack";
             }
             $seen{$new_root} = 1;
@@ -52,10 +49,7 @@ sub merge {
                 confess "Could not find method $parent_fetcher in $new_root";
             }
 
-            push(@RSTACK, $current_root);
-            push(@PSTACK, $current_parents);
-            push(@MSTACK, $recurse_mergeout);
-            push(@ISTACK, $i);
+            push(@STACK, $current_root, $current_parents, $recurse_mergeout, $i);
 
             $current_root = $new_root;
             $current_parents = $cache->{pfetch}->{$current_root} ||= [ $current_root->$parent_fetcher ];
@@ -120,12 +114,12 @@ sub merge {
             \@res;
         };
 
-        return @$mergeout if !@ISTACK;
+        return @$mergeout if !@STACK;
 
-        $current_root = pop(@RSTACK);
-        $current_parents = pop(@PSTACK);
-        $recurse_mergeout = pop(@MSTACK);
-        $i = pop(@ISTACK);
+        $i = pop(@STACK);
+        $recurse_mergeout = pop(@STACK);
+        $current_parents = pop(@STACK);
+        $current_root = pop(@STACK);
 
         push(@$recurse_mergeout, $mergeout) if @$mergeout;
     }
