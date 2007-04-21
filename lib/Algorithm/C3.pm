@@ -26,7 +26,7 @@ sub merge {
     my $i = 0;
     my %seen = ( $root => 1 );
 
-    my ($new_root, $mergeout, $seq);
+    my ($new_root, $mergeout, %tails);
     while(1) {
         if($i < @$current_parents) {
             $new_root = $current_parents->[$i++];
@@ -75,9 +75,9 @@ sub merge {
                 push(@seqs, [@$_]) if @$_;
             }
 
-            # Construct the tail-checking hash
-            my %tails;
-            foreach $seq (@seqs) {
+            # Construct the tail-checking hash (actually, it's cheaper and still
+            #   correct to re-use it throughout this function)
+            foreach my $seq (@seqs) {
                 $tails{$seq->[$_]}++ for (1..$#$seq);
             }
 
