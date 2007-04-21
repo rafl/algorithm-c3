@@ -70,10 +70,8 @@ sub merge {
             # http://www.python.org/2.3/mro.html :)
 
             # Initial set (make sure everything is copied - it will be modded)
-            my @seqs;
-            foreach (@$recurse_mergeout, $current_parents) {
-                push(@seqs, [@$_]) if @$_;
-            }
+            my @seqs = map { [@$_] } @$recurse_mergeout;
+            push(@seqs, [@$current_parents]) if @$current_parents;
 
             # Construct the tail-checking hash (actually, it's cheaper and still
             #   correct to re-use it throughout this function)
@@ -124,7 +122,7 @@ sub merge {
         ($current_root, $current_parents, $recurse_mergeout, $i)
             = @{pop @STACK};
 
-        push(@$recurse_mergeout, $mergeout);
+        push(@$recurse_mergeout, $mergeout) if @$mergeout;
     }
 }
 
