@@ -12,7 +12,12 @@ sub merge {
     my ($root, $parent_fetcher, $cache) = @_;
 
     $cache ||= {};
-    my @STACK;  # stack for simulating recursion
+
+    # stacks for simulating recursion
+    my @RSTACK;
+    my @PSTACK;
+    my @MSTACK;
+    my @ISTACK;
 
     my $pfetcher_is_coderef = ref($parent_fetcher) eq 'CODE';
 
@@ -33,7 +38,7 @@ sub merge {
 
             if($seen{$new_root}) {
                 my @isastack = (
-                    (map { $_->[0] } @STACK),
+                    @RSTACK,
                     $current_root,
                     $new_root
                 );
@@ -47,12 +52,10 @@ sub merge {
                 confess "Could not find method $parent_fetcher in $new_root";
             }
 
-            push(@STACK, [
-                $current_root,
-                $current_parents,
-                $recurse_mergeout,
-                $i,
-            ]);
+            push(@RSTACK, $current_root);
+            push(@PSTACK, $current_parents);
+            push(@MSTACK, $recurse_mergeout);
+            push(@ISTACK, $i);
 
             $current_root = $new_root;
             $current_parents = $cache->{pfetch}->{$current_root} ||= [ $current_root->$parent_fetcher ];
@@ -117,10 +120,12 @@ sub merge {
             \@res;
         };
 
-        return @$mergeout if !@STACK;
+        return @$mergeout if !@ISTACK;
 
-        ($current_root, $current_parents, $recurse_mergeout, $i)
-            = @{pop @STACK};
+        $current_root = pop(@RSTACK);
+        $current_parents = pop(@PSTACK);
+        $recurse_mergeout = pop(@MSTACK);
+        $i = pop(@ISTACK);
 
         push(@$recurse_mergeout, $mergeout) if @$mergeout;
     }
