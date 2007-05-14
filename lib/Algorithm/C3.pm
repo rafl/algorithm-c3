@@ -6,7 +6,7 @@ use warnings;
 
 use Carp 'confess';
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 sub merge {
     my ($root, $parent_fetcher, $cache) = @_;
@@ -121,7 +121,7 @@ sub merge {
         $current_parents = pop(@STACK);
         $current_root = pop(@STACK);
 
-        push(@$recurse_mergeout, $mergeout) if @$mergeout;
+        push(@$recurse_mergeout, $mergeout);
     }
 }
 

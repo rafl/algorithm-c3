@@ -1,4 +1,4 @@
-Algorithm::C3 version 0.06
+Algorithm::C3 version 0.07
 ===========================
 
 See the individual module documentation for more information
@@ -16,7 +16,7 @@ DEPENDENCIES
 
 This module requires these other modules and libraries:
 
-	None
+   Carp
 
 COPYRIGHT AND LICENCE
 
