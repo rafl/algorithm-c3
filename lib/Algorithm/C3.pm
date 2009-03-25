@@ -85,7 +85,7 @@ sub merge {
                     if(!$winner) {              # looking for a winner
                         $cand = $_->[0];        # seq head is candidate
                         next if $tails{$cand};  # he loses if in %tails
-                        
+
                         # Handy warn to give a output like the ones on
                         # http://www.python.org/download/releases/2.3/mro/
                         #warn " = " . join(' + ', @res) . "  + merge([" . join('] [',  map { join(', ', @$_) } grep { @$_ } @seqs) . "])\n";
@@ -98,11 +98,11 @@ sub merge {
                         $tails{$_->[0]}-- if @$_; # keep %tails sane
                     }
                 }
-                
+
                 # Handy warn to give a output like the ones on
                 # http://www.python.org/download/releases/2.3/mro/
-                #warn " = " . join(' + ', @res) . "\n" if !$cand; 
-                
+                #warn " = " . join(' + ', @res) . "\n" if !$cand;
+
                 last if !$cand;
                 die q{Inconsistent hierarchy found while merging '}
                     . $current_root . qq{':\n\t}
@@ -138,57 +138,57 @@ Algorithm::C3 - A module for merging hierarchies using the C3 algorithm
 =head1 SYNOPSIS
 
   use Algorithm::C3;
-  
-  # merging a classic diamond 
+
+  # merging a classic diamond
   # inheritence graph like this:
   #
   #    <A>
   #   /   \
   # <B>   <C>
   #   \   /
-  #    <D>  
+  #    <D>
 
   my @merged = Algorithm::C3::merge(
-      'D', 
+      'D',
       sub {
-          # extract the ISA array 
+          # extract the ISA array
           # from the package
           no strict 'refs';
           @{$_[0] . '::ISA'};
       }
   );
-  
+
   print join ", " => @merged; # prints D, B, C, A
 
 =head1 DESCRIPTION
 
-This module implements the C3 algorithm. I have broken this out 
-into it's own module because I found myself copying and pasting 
-it way too often for various needs. Most of the uses I have for 
-C3 revolve around class building and metamodels, but it could 
-also be used for things like dependency resolution as well since 
-it tends to do such a nice job of preserving local precendence 
-orderings. 
+This module implements the C3 algorithm. I have broken this out
+into it's own module because I found myself copying and pasting
+it way too often for various needs. Most of the uses I have for
+C3 revolve around class building and metamodels, but it could
+also be used for things like dependency resolution as well since
+it tends to do such a nice job of preserving local precendence
+orderings.
 
-Below is a brief explanation of C3 taken from the L<Class::C3> 
-module. For more detailed information, see the L<SEE ALSO> section 
+Below is a brief explanation of C3 taken from the L<Class::C3>
+module. For more detailed information, see the L<SEE ALSO> section
 and the links there.
 
 =head2 What is C3?
 
-C3 is the name of an algorithm which aims to provide a sane method 
-resolution order under multiple inheritence. It was first introduced 
-in the langauge Dylan (see links in the L<SEE ALSO> section), and 
-then later adopted as the prefered MRO (Method Resolution Order) 
-for the new-style classes in Python 2.3. Most recently it has been 
-adopted as the 'canonical' MRO for Perl 6 classes, and the default 
+C3 is the name of an algorithm which aims to provide a sane method
+resolution order under multiple inheritence. It was first introduced
+in the langauge Dylan (see links in the L<SEE ALSO> section), and
+then later adopted as the prefered MRO (Method Resolution Order)
+for the new-style classes in Python 2.3. Most recently it has been
+adopted as the 'canonical' MRO for Perl 6 classes, and the default
 MRO for Parrot objects as well.
 
 =head2 How does C3 work.
 
-C3 works by always preserving local precendence ordering. This 
-essentially means that no class will appear before any of it's 
-subclasses. Take the classic diamond inheritence pattern for 
+C3 works by always preserving local precendence ordering. This
+essentially means that no class will appear before any of it's
+subclasses. Take the classic diamond inheritence pattern for
 instance:
 
      <A>
@@ -197,12 +197,12 @@ instance:
     \   /
      <D>
 
-The standard Perl 5 MRO would be (D, B, A, C). The result being that 
-B<A> appears before B<C>, even though B<C> is the subclass of B<A>. 
-The C3 MRO algorithm however, produces the following MRO (D, B, C, A), 
+The standard Perl 5 MRO would be (D, B, A, C). The result being that
+B<A> appears before B<C>, even though B<C> is the subclass of B<A>.
+The C3 MRO algorithm however, produces the following MRO (D, B, C, A),
 which does not have this same issue.
 
-This example is fairly trival, for more complex examples and a deeper 
+This example is fairly trival, for more complex examples and a deeper
 explaination, see the links in the L<SEE ALSO> section.
 
 =head1 FUNCTION
@@ -212,32 +212,32 @@ explaination, see the links in the L<SEE ALSO> section.
 =item B<merge ($root, $func_to_fetch_parent, $cache)>
 
 This takes a C<$root> node, which can be anything really it
-is up to you. Then it takes a C<$func_to_fetch_parent> which 
-can be either a CODE reference (see L<SYNOPSIS> above for an 
-example), or a string containing a method name to be called 
-on all the items being linearized. An example of how this 
+is up to you. Then it takes a C<$func_to_fetch_parent> which
+can be either a CODE reference (see L<SYNOPSIS> above for an
+example), or a string containing a method name to be called
+on all the items being linearized. An example of how this
 might look is below:
 
   {
       package A;
-      
+
       sub supers {
           no strict 'refs';
           @{$_[0] . '::ISA'};
-      }    
-      
+      }
+
       package C;
       our @ISA = ('A');
       package B;
-      our @ISA = ('A');    
-      package D;       
-      our @ISA = ('B', 'C');         
+      our @ISA = ('A');
+      package D;
+      our @ISA = ('B', 'C');
   }
-  
+
   print join ", " => Algorithm::C3::merge('D', 'supers');
 
-The purpose of C<$func_to_fetch_parent> is to provide a way 
-for C<merge> to extract the parents of C<$root>. This is 
+The purpose of C<$func_to_fetch_parent> is to provide a way
+for C<merge> to extract the parents of C<$root>. This is
 needed for C3 to be able to do it's work.
 
 The C<$cache> parameter is an entirely optional performance
@@ -264,7 +264,7 @@ of the calls.  Example:
 
 =head1 CODE COVERAGE
 
-I use B<Devel::Cover> to test the code coverage of my tests, below 
+I use B<Devel::Cover> to test the code coverage of my tests, below
 is the B<Devel::Cover> report on this module's test suite.
 
  ------------------------ ------ ------ ------ ------ ------ ------ ------
@@ -319,7 +319,7 @@ is the B<Devel::Cover> report on this module's test suite.
 
 =item L<http://www.call-with-current-continuation.org/eggs/c3.html>
 
-=back 
+=back
 
 =head1 AUTHORS
 
@@ -334,6 +334,6 @@ Copyright 2006 by Infinity Interactive, Inc.
 L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =cut
