@@ -1,0 +1,16 @@
+.*
+!.gitignore
+Build*
+!Build.PL
+META.yml
+blib
+build
+_build
+inc
+pm_to_blib
+MANIFEST*
+!MANIFEST.SKIP
+Debian*
+README
+App-Software-License-*
+*.bs
