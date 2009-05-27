@@ -1,5 +1,9 @@
 Revision history for Perl extension Algorithm-C3.
 
+0.08 Thu. May 28, 2009
+    - Fix a couple of doc typos.
+    - Don't create a fake Makefile.PL.
+
 0.07 Mon. May 14, 2007
     - Some very small optimizations had been
       gathering in the repo for a while, this
