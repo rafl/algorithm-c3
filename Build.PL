@@ -12,7 +12,6 @@ my $build = Module::Build->new(
     build_requires => {
         'Test::More' => '0.47',
     },
-    create_makefile_pl => 'traditional',
     recursive_test_files => 1,
     add_to_cleanup => [
         'META.yml', '*.bak', '*.gz', 'Makefile.PL',
