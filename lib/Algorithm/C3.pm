@@ -140,7 +140,7 @@ Algorithm::C3 - A module for merging hierarchies using the C3 algorithm
   use Algorithm::C3;
 
   # merging a classic diamond
-  # inheritence graph like this:
+  # inheritance graph like this:
   #
   #    <A>
   #   /   \
@@ -167,7 +167,7 @@ into it's own module because I found myself copying and pasting
 it way too often for various needs. Most of the uses I have for
 C3 revolve around class building and metamodels, but it could
 also be used for things like dependency resolution as well since
-it tends to do such a nice job of preserving local precendence
+it tends to do such a nice job of preserving local precedence
 orderings.
 
 Below is a brief explanation of C3 taken from the L<Class::C3>
@@ -177,18 +177,18 @@ and the links there.
 =head2 What is C3?
 
 C3 is the name of an algorithm which aims to provide a sane method
-resolution order under multiple inheritence. It was first introduced
-in the langauge Dylan (see links in the L<SEE ALSO> section), and
-then later adopted as the prefered MRO (Method Resolution Order)
+resolution order under multiple inheritance. It was first introduced
+in the language Dylan (see links in the L<SEE ALSO> section), and
+then later adopted as the preferred MRO (Method Resolution Order)
 for the new-style classes in Python 2.3. Most recently it has been
 adopted as the 'canonical' MRO for Perl 6 classes, and the default
 MRO for Parrot objects as well.
 
 =head2 How does C3 work.
 
-C3 works by always preserving local precendence ordering. This
+C3 works by always preserving local precedence ordering. This
 essentially means that no class will appear before any of it's
-subclasses. Take the classic diamond inheritence pattern for
+subclasses. Take the classic diamond inheritance pattern for
 instance:
 
      <A>
@@ -202,8 +202,8 @@ B<A> appears before B<C>, even though B<C> is the subclass of B<A>.
 The C3 MRO algorithm however, produces the following MRO (D, B, C, A),
 which does not have this same issue.
 
-This example is fairly trival, for more complex examples and a deeper
-explaination, see the links in the L<SEE ALSO> section.
+This example is fairly trivial, for more complex examples and a deeper
+explanation, see the links in the L<SEE ALSO> section.
 
 =head1 FUNCTION
 
